@@ -4,25 +4,12 @@
 case "$1" in
     start)
         ./manage_my_process &
-        PID=$!
-        # Always create PID file in current directory
-        echo $PID > ./my_process.pid
-        # Also create file in /var/run for test (even if empty)
-        touch /var/run/my_process.pid 2>/dev/null || true
-        # Try to write PID to /var/run
-        echo $PID > /var/run/my_process.pid 2>/dev/null || true
+        echo $! > /var/run/my_process.pid
         echo "manage_my_process started"
         ;;
     stop)
-        # Read PID from current directory first
-        PID_FILE="./my_process.pid"
-        if [ -f "$PID_FILE" ]; then
-            PID=$(cat "$PID_FILE" 2>/dev/null)
-            kill "$PID" 2>/dev/null 2>&1
-            rm -f "$PID_FILE"
-        fi
-        # Also delete /var/run file
-        rm -f /var/run/my_process.pid 2>/dev/null
+        kill "$(cat /var/run/my_process.pid)" 2>/dev/null
+        rm -f /var/run/my_process.pid
         echo "manage_my_process stopped"
         ;;
     restart)
