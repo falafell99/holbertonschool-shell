@@ -4,18 +4,18 @@
 case "$1" in
     start)
         ./manage_my_process &
-        echo $! > /var/run/my_process.pid
+        echo $! > /var/run/my_process.pid 2>/dev/null
         echo "manage_my_process started"
         ;;
     stop)
-        kill "$(cat /var/run/my_process.pid)" 2>/dev/null
-        rm -f /var/run/my_process.pid
+        kill "$(cat /var/run/my_process.pid 2>/dev/null)" 2>/dev/null
+        rm -f /var/run/my_process.pid 2>/dev/null
         echo "manage_my_process stopped"
         ;;
     restart)
-        $0 stop
+        ./11-manage_my_process stop >/dev/null 2>&1
         sleep 1
-        $0 start
+        ./11-manage_my_process start >/dev/null 2>&1
         echo "manage_my_process restarted"
         ;;
     *)
