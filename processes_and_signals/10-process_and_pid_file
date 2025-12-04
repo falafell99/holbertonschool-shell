@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 # This script creates a PID file and handles multiple signals
 
-# Try to create PID file
-echo $$ > /var/run/myscript.pid 2>/dev/null
+echo $$ > /var/run/myscript.pid
 
-# Wait and check
-sleep 0.5
-if [ ! -f /var/run/myscript.pid ]; then
-    # Create empty file at least
-    touch /var/run/myscript.pid 2>/dev/null || true
-fi
-
-trap 'echo "I hate the kill command"; rm -f /var/run/myscript.pid 2>/dev/null; exit' SIGTERM
+trap 'echo "I hate the kill command"; rm -f /var/run/myscript.pid; exit' SIGTERM
 trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm -f /var/run/myscript.pid 2>/dev/null; exit' SIGQUIT
+trap 'rm -f /var/run/myscript.pid; exit' SIGQUIT
 
 while true
 do
