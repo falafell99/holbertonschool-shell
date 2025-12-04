@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 # This script creates a PID file and handles multiple signals
 
-# Create PID file
-echo $$ > /var/run/myscript.pid
-sleep 0.5
+# Disable exit on error
+set +e
+
+# Create PID file using full paths
+/bin/touch /var/run/myscript.pid 2>/dev/null
+/bin/echo $$ > /var/run/myscript.pid 2>/dev/null
 
 # Signal handlers
-trap 'echo "I hate the kill command"; rm -f /var/run/myscript.pid; exit' SIGTERM
+trap 'echo "I hate the kill command"; /bin/rm -f /var/run/myscript.pid 2>/dev/null; exit' SIGTERM
 trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm -f /var/run/myscript.pid; exit' SIGQUIT
+trap '/bin/rm -f /var/run/myscript.pid 2>/dev/null; exit' SIGQUIT
 
-# Main loop
-while true
+# Keep running
+while :
 do
     echo "To infinity and beyond"
-    sleep 1
+    /bin/sleep 3600
 done
